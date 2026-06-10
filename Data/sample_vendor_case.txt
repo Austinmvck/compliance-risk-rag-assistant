@@ -1,0 +1,96 @@
+COMPANY PROFILE
+
+Company Name: Northbridge Industrial Components Ltd.
+Primary Business: Manufacturer and distributor of industrial control components
+Headquarters: Rotterdam, Netherlands
+Review Purpose: Third-party compliance and operational risk assessment
+
+
+SOURCE A — Corporate Registry Extract
+Source Date: 2026-05-01
+Source Type: Government corporate registry
+
+Northbridge Industrial Components Ltd. was incorporated in the Netherlands in 2014.
+
+The registry lists the following shareholders:
+
+- Northbridge Holdings B.V. — 70%
+- Daniel Vermeer — 20%
+- Private investors — 10%
+
+The registry identifies Daniel Vermeer as the ultimate beneficial owner associated with Northbridge Holdings B.V.
+
+The registry record was last updated on 2025-11-18.
+
+
+SOURCE B — Sanctions Screening Report
+Source Date: 2026-05-03
+Source Type: Third-party sanctions screening provider
+
+Northbridge Industrial Components Ltd. did not produce an exact match against the sanctions lists included in the screening report.
+
+The screening report identified a possible name match between Daniel Vermeer and an individual listed under a European restrictive-measures program.
+
+The report classified the result as a potential match requiring additional review.
+
+The report did not confirm that the listed individual and Northbridge’s beneficial owner were the same person.
+
+Available identifiers were incomplete. The listed individual’s full date of birth and passport information were not available in the report.
+
+
+SOURCE C — Cybersecurity Monitoring Report
+Source Date: 2026-05-05
+Source Type: External cybersecurity monitoring provider
+
+The report identified an internet-facing file-transfer service associated with Northbridge Industrial Components Ltd.
+
+The service was observed using an outdated software version with publicly documented vulnerabilities.
+
+No confirmed breach, data theft, or exploitation was identified.
+
+The provider assigned the issue a medium severity rating and recommended remediation within 30 days.
+
+
+SOURCE D — Vendor Questionnaire
+Source Date: 2026-04-22
+Source Type: Vendor-submitted questionnaire
+
+Northbridge stated that all externally accessible systems were fully patched as of 2026-04-15.
+
+Northbridge also stated that it had not experienced a material cybersecurity incident during the previous 24 months.
+
+The questionnaire was completed by the company’s Head of Information Technology.
+
+No supporting vulnerability scan or remediation evidence was attached.
+
+
+KNOWN FACTS
+
+- Northbridge is an active Netherlands-based company.
+- Daniel Vermeer is connected to the company’s ownership structure.
+- A sanctions-screening provider identified a possible, unconfirmed name match.
+- An external monitoring report identified outdated software on an internet-facing service.
+- No confirmed sanctions match or cybersecurity breach was established.
+
+
+UNKNOWN OR MISSING INFORMATION
+
+- Whether Daniel Vermeer is the same person as the sanctions-listed individual.
+- Daniel Vermeer’s complete date of birth, passport number, and nationality.
+- Whether the outdated software has been remediated.
+- Whether the vendor’s cybersecurity statements have been independently verified.
+- Whether Northbridge has ever been investigated for bribery or corruption.
+
+
+CONFLICTING INFORMATION
+
+The external cybersecurity monitoring report dated 2026-05-05 identified outdated software on an internet-facing service.
+
+The vendor questionnaire stated that all externally accessible systems were fully patched as of 2026-04-15.
+
+The supplied information does not establish whether:
+
+- the questionnaire was inaccurate;
+- the system became outdated after the questionnaire date;
+- the external provider’s observation was incorrect; or
+- remediation occurred after the monitoring report.

@@ -1,57 +1,62 @@
-# Week 1 Notes — Claude API Fundamentals
+# Sample Outputs
 
-## Block 1: Setup + First Claude API Call
+## Baseline Test — Ungrounded Claude API Response
 
-### What I Built
+### Test Information
 
-I created a local Python project connected to GitHub and successfully ran my first direct Claude API call.
+Test date: June 10, 2026  
+Script: Scripts/01_basic_claude_call.py  
+Test type: Claude API response without supplied source evidence  
+Purpose: Establish a baseline before source grounding, abstention instructions, and traceability controls are added.
 
-The script `Scripts/01_basic_claude_call.py` sends a supplier-risk note to Claude and returns a short compliance-style summary.
+### Model Used
 
-### Files Created / Used
+Model              model="claude-sonnet-4-5",
 
-- `Scripts/01_basic_claude_call.py` — first direct Claude API script
-- `.env` — stores the real Anthropic API key locally
-- `.env.example` — safe placeholder showing required environment variable
-- `.gitignore` — prevents `.env`, `.venv`, and local machine files from being committed
-- `requirements.txt` — lists Python dependencies
-- `Outputs/sample_outputs.md` — stores sample output from the first script
+### Prompt Used
 
-### What Happened Technically
+prompt = f"""
+    You are helping a compliance analyst review a supplier risk note.
 
-The script loaded the API key from `.env`, created an Anthropic client, sent a prompt to Claude, and printed the returned response in Terminal.
+    Summarize the note in 3 concise bullets.
 
-The basic flow was:
+    Supplier risk note:
+    {supplier_risk_note}
+    """
 
-1. Local Python script runs.
-2. `.env` loads the Anthropic API key.
-3. The Anthropic client authenticates the request.
-4. The prompt is sent to the Claude model.
-5. Claude returns a response.
-6. The script prints the response in Terminal.
+### Model Response
 
-### Errors I Hit
+# Supplier Risk Summary
 
-#### Error 1: Invalid API Key
+• **Adverse Media Alert**: Supplier ABC flagged for alleged labor violations at an overseas facility
 
-I got a `401 invalid x-api-key` error.
+• **Forced Labor Concerns**: Multiple NGOs have identified potential forced labor indicators, though no official sanctions have been issued
 
-Cause: `.env` still contained a placeholder value instead of a real Anthropic API key.
 
-Product takeaway: AI workflows depend on correct secrets and environment configuration. Bad credentials break the integration before the model can do anything useful.
+### Initial Observations
 
-#### Error 2: Model Not Found
+#### Response quality
 
-I got a `404 model not found` error.
+Describe whether the response was clear, relevant, structured, and useful.
 
-Cause: The model name in the script was not valid for my API/account.
+#### Evidence grounding
 
-Product takeaway: External AI providers can change model names, model access, and version availability. Product teams need model/version awareness, fallback behavior, and clear error handling.
+The response was generated without an approved source document. Even if the answer appeared reasonable, the workflow could not verify whether its claims were supported by evidence.
 
-### PM Takeaways
+#### Traceability
 
-- A direct LLM API call is the foundation of most applied AI workflows.
-- Freeform model output can be useful, but it is not automatically product-ready.
-- Risk/compliance workflows need structured outputs, source evidence, confidence, and human-review logic.
-- Authentication, model configuration, and provider dependencies are real product risks.
-- The next step is to move from loose text output to structured output.
+The response did not connect its conclusions to specific source passages because no controlled source material was provided.
+
+#### Uncertainty handling
+
+Document whether the model distinguished known facts, assumptions, missing information, and uncertainty.
+
+#### Human-review behavior
+
+Document whether the response recommended additional research or human review.
+
+### Baseline Product Assessment
+
+The API connection produced a readable response, but the workflow does not yet provide sufficient grounding, traceability, abstention behavior, or human-review controls for a compliance decision-support product.
+
+This output will be compared with later tests using controlled source context.
