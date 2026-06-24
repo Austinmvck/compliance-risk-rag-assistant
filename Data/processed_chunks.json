@@ -1,0 +1,79 @@
+[
+  {
+    "chunk_id": "SOURCE_A_CHUNK_1",
+    "source_id": "SOURCE_A",
+    "source_name": "Corporate Registry Extract",
+    "source_date": "2026-05-01",
+    "source_type": "Government registry",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "corporate_registry.txt",
+    "chunk_index": 1,
+    "text": "Northbridge Industrial Components Ltd. is an active company incorporated in the Netherlands in 2014.\n\nThe company is headquartered in Rotterdam, Netherlands.\n\nThe corporate registry lists the following ownership structure:\n- Northbridge Holdings B.V. owns 70 percent of Northbridge Industrial Components Ltd.\n- Daniel Vermeer owns 20 percent of Northbridge Industrial Components Ltd.\n- Private investors own 10 percent of Northbridge Industrial Components Ltd.\n\nDaniel Vermeer is also associated with Northbridge Holdings B.V. as a beneficial owner.\n\nThe registry information was last updated on 2025-11-18.\n\nThe corporate registry extract does not provide information about other companies owned by"
+  },
+  {
+    "chunk_id": "SOURCE_A_CHUNK_2",
+    "source_id": "SOURCE_A",
+    "source_name": "Corporate Registry Extract",
+    "source_date": "2026-05-01",
+    "source_type": "Government registry",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "corporate_registry.txt",
+    "chunk_index": 2,
+    "text": "last updated on 2025-11-18.\n\nThe corporate registry extract does not provide information about other companies owned by Northbridge Holdings B.V."
+  },
+  {
+    "chunk_id": "SOURCE_C_CHUNK_1",
+    "source_id": "SOURCE_C",
+    "source_name": "Cybersecurity Monitoring Report",
+    "source_date": "2026-05-05",
+    "source_type": "Cybersecurity monitoring provider",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "cyber_monitoring.txt",
+    "chunk_index": 1,
+    "text": "The cybersecurity monitoring report identified an internet-facing file-transfer service associated with Northbridge Industrial Components Ltd.\n\nThe file-transfer service was using outdated software with known public vulnerabilities.\n\nThe report rated the issue as medium severity.\n\nThe report did not identify a confirmed breach.\n\nThe report did not identify confirmed data theft.\n\nThe report did not identify confirmed exploitation of the vulnerability.\n\nThe report recommended remediation within 30 days.\n\nThe report was produced after the vendor questionnaire date."
+  },
+  {
+    "chunk_id": "SOURCE_B_CHUNK_1",
+    "source_id": "SOURCE_B",
+    "source_name": "Sanctions Screening Report",
+    "source_date": "2026-05-03",
+    "source_type": "Third-party sanctions screening provider",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "sanctions_screening.txt",
+    "chunk_index": 1,
+    "text": "The sanctions screening report found no exact sanctions match for Northbridge Industrial Components Ltd.\n\nThe report identified a possible name match involving Daniel Vermeer and an individual listed on an EU restrictive-measures list.\n\nThe report states that the possible match is not confirmed to be the same person.\n\nThe report does not include sufficient identifiers to verify the match.\n\nMissing identifiers include:\n- date of birth\n- passport number\n- national identification number\n- nationality\n- residential address\n\nThe report recommends additional identity verification before making a sanctions determination.\n\nThe report does not state that Daniel Vermeer is sanctioned.\n\nThe report does"
+  },
+  {
+    "chunk_id": "SOURCE_B_CHUNK_2",
+    "source_id": "SOURCE_B",
+    "source_name": "Sanctions Screening Report",
+    "source_date": "2026-05-03",
+    "source_type": "Third-party sanctions screening provider",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "sanctions_screening.txt",
+    "chunk_index": 2,
+    "text": "before making a sanctions determination.\n\nThe report does not state that Daniel Vermeer is sanctioned.\n\nThe report does not state that Northbridge Industrial Components Ltd. is sanctioned."
+  },
+  {
+    "chunk_id": "SOURCE_D_CHUNK_1",
+    "source_id": "SOURCE_D",
+    "source_name": "Vendor Questionnaire",
+    "source_date": "2026-04-22",
+    "source_type": "Vendor-provided questionnaire",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "vendor_questionnaire.txt",
+    "chunk_index": 1,
+    "text": "Northbridge Industrial Components Ltd. submitted a vendor questionnaire on 2026-04-22.\n\nThe questionnaire was completed by the vendor's Head of IT.\n\nThe vendor stated that all external systems were patched as of 2026-04-15.\n\nThe vendor stated that it had no material cybersecurity incidents in the prior 24 months.\n\nThe questionnaire did not include supporting scan evidence.\n\nThe questionnaire did not include remediation evidence.\n\nThe questionnaire does not prove that the external file-transfer service remained fully patched after 2026-04-15.\n\nThe vendor's statement may conflict with the later cybersecurity monitoring report dated 2026-05-05, which identified outdated software on an internet-"
+  },
+  {
+    "chunk_id": "SOURCE_D_CHUNK_2",
+    "source_id": "SOURCE_D",
+    "source_name": "Vendor Questionnaire",
+    "source_date": "2026-04-22",
+    "source_type": "Vendor-provided questionnaire",
+    "entity": "Northbridge Industrial Components Ltd.",
+    "file_name": "vendor_questionnaire.txt",
+    "chunk_index": 2,
+    "text": "lict with the later cybersecurity monitoring report dated 2026-05-05, which identified outdated software on an internet-facing file-transfer service."
+  }
+]

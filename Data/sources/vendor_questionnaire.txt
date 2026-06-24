@@ -1,0 +1,22 @@
+SOURCE_ID: SOURCE_D
+SOURCE_NAME: Vendor Questionnaire
+SOURCE_DATE: 2026-04-22
+SOURCE_TYPE: Vendor-provided questionnaire
+ENTITY: Northbridge Industrial Components Ltd.
+
+CONTENT:
+Northbridge Industrial Components Ltd. submitted a vendor questionnaire on 2026-04-22.
+
+The questionnaire was completed by the vendor's Head of IT.
+
+The vendor stated that all external systems were patched as of 2026-04-15.
+
+The vendor stated that it had no material cybersecurity incidents in the prior 24 months.
+
+The questionnaire did not include supporting scan evidence.
+
+The questionnaire did not include remediation evidence.
+
+The questionnaire does not prove that the external file-transfer service remained fully patched after 2026-04-15.
+
+The vendor's statement may conflict with the later cybersecurity monitoring report dated 2026-05-05, which identified outdated software on an internet-facing file-transfer service.

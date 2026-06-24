@@ -1,0 +1,22 @@
+SOURCE_ID: SOURCE_C
+SOURCE_NAME: Cybersecurity Monitoring Report
+SOURCE_DATE: 2026-05-05
+SOURCE_TYPE: Cybersecurity monitoring provider
+ENTITY: Northbridge Industrial Components Ltd.
+
+CONTENT:
+The cybersecurity monitoring report identified an internet-facing file-transfer service associated with Northbridge Industrial Components Ltd.
+
+The file-transfer service was using outdated software with known public vulnerabilities.
+
+The report rated the issue as medium severity.
+
+The report did not identify a confirmed breach.
+
+The report did not identify confirmed data theft.
+
+The report did not identify confirmed exploitation of the vulnerability.
+
+The report recommended remediation within 30 days.
+
+The report was produced after the vendor questionnaire date.

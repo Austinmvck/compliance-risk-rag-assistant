@@ -1,0 +1,27 @@
+SOURCE_ID: SOURCE_B
+SOURCE_NAME: Sanctions Screening Report
+SOURCE_DATE: 2026-05-03
+SOURCE_TYPE: Third-party sanctions screening provider
+ENTITY: Northbridge Industrial Components Ltd.
+
+CONTENT:
+The sanctions screening report found no exact sanctions match for Northbridge Industrial Components Ltd.
+
+The report identified a possible name match involving Daniel Vermeer and an individual listed on an EU restrictive-measures list.
+
+The report states that the possible match is not confirmed to be the same person.
+
+The report does not include sufficient identifiers to verify the match.
+
+Missing identifiers include:
+- date of birth
+- passport number
+- national identification number
+- nationality
+- residential address
+
+The report recommends additional identity verification before making a sanctions determination.
+
+The report does not state that Daniel Vermeer is sanctioned.
+
+The report does not state that Northbridge Industrial Components Ltd. is sanctioned.

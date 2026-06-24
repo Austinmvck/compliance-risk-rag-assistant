@@ -1,0 +1,21 @@
+SOURCE_ID: SOURCE_A
+SOURCE_NAME: Corporate Registry Extract
+SOURCE_DATE: 2026-05-01
+SOURCE_TYPE: Government registry
+ENTITY: Northbridge Industrial Components Ltd.
+
+CONTENT:
+Northbridge Industrial Components Ltd. is an active company incorporated in the Netherlands in 2014.
+
+The company is headquartered in Rotterdam, Netherlands.
+
+The corporate registry lists the following ownership structure:
+- Northbridge Holdings B.V. owns 70 percent of Northbridge Industrial Components Ltd.
+- Daniel Vermeer owns 20 percent of Northbridge Industrial Components Ltd.
+- Private investors own 10 percent of Northbridge Industrial Components Ltd.
+
+Daniel Vermeer is also associated with Northbridge Holdings B.V. as a beneficial owner.
+
+The registry information was last updated on 2025-11-18.
+
+The corporate registry extract does not provide information about other companies owned by Northbridge Holdings B.V.
