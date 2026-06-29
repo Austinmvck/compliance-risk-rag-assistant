@@ -31,6 +31,26 @@ DEFAULT_QUESTION = "Who owns Northbridge Industrial Components Ltd.?"
 MODEL_NAME = "claude-sonnet-4-5"
 MAX_TOKENS = 1000
 
+NO_RELEVANT_EVIDENCE_MESSAGE = """
+Answer:
+Insufficient evidence. No relevant evidence was retrieved above the similarity threshold.
+
+Evidence used:
+None. The retrieval layer did not return any chunks that met the minimum similarity threshold.
+
+Source references:
+None.
+
+Unknowns or conflicting information:
+The available source corpus does not contain retrieved evidence that supports answering this question.
+
+Confidence:
+Low for answering the question; high that the current retrieved evidence is insufficient.
+
+Human review required:
+Yes. A human analyst should gather additional relevant sources before making a compliance or risk judgment.
+""".strip()
+
 
 retrieval_module = SourceFileLoader(
     "retrieve_chunks_module",
@@ -113,6 +133,9 @@ def get_rag_answer(question: str) -> tuple[list[dict], str]:
     chunks = retrieval_module.load_chunks(CHUNKS_FILE)
     retrieved_chunks = retrieval_module.retrieve_chunks(question, chunks)
 
+    if not retrieved_chunks:
+        return retrieved_chunks, NO_RELEVANT_EVIDENCE_MESSAGE
+
     evidence = format_retrieved_evidence(retrieved_chunks)
     prompt = build_prompt(question, evidence)
 
@@ -133,6 +156,11 @@ def print_retrieved_chunks(question: str, retrieved_chunks: list[dict]) -> None:
     """
     print("\nQuestion:")
     print(question)
+
+    if not retrieved_chunks:
+        print("\nNo relevant evidence retrieved above the similarity threshold.")
+        print("Claude was not called because the retrieval layer did not return usable evidence.\n")
+        return
 
     print("\nRetrieved evidence sent to Claude:\n")
 

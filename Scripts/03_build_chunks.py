@@ -13,6 +13,7 @@ This prepares the project for retrieval, but does not perform retrieval yet.
 
 import json
 from pathlib import Path
+import re
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -72,29 +73,43 @@ def parse_source_file(file_path: Path) -> dict:
     return metadata
 
 
-def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list[str]:
+def split_into_sentences(text):
     """
-    Split text into overlapping character-based chunks.
+    Split text into sentences using a lightweight regex approach.
 
-    This simple approach is intentionally transparent for the first retrieval pass.
+    This avoids adding new dependencies while keeping sentence boundaries
+    more intact than raw character-based chunking.
     """
-    if chunk_size <= overlap:
-        raise ValueError("chunk_size must be greater than overlap")
+    normalized_text = re.sub(r"\s+", " ", text).strip()
+    if not normalized_text:
+        return []
 
+    return re.split(r"(?<=[.!?])\s+(?=[A-Z])", normalized_text)
+
+
+def chunk_text(text, chunk_size=CHUNK_SIZE):
+    """
+    Group full sentences into chunks up to the target chunk size.
+
+    This keeps facts and qualifiers together more often than character-based
+    chunking, which can split words or cut claims in half.
+    """
+    sentences = split_into_sentences(text)
     chunks = []
-    start = 0
+    current_chunk = []
 
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end].strip()
+    for sentence in sentences:
+        candidate = " ".join(current_chunk + [sentence]).strip()
 
-        if chunk:
-            chunks.append(chunk)
+        if len(candidate) <= chunk_size:
+            current_chunk.append(sentence)
+        else:
+            if current_chunk:
+                chunks.append(" ".join(current_chunk).strip())
+            current_chunk = [sentence]
 
-        if end >= len(text):
-            break
-
-        start = end - overlap
+    if current_chunk:
+        chunks.append(" ".join(current_chunk).strip())
 
     return chunks
 

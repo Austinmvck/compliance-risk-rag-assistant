@@ -23,7 +23,9 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CHUNKS_FILE = PROJECT_ROOT / "Data" / "processed_chunks.json"
+
 TOP_K = 3
+MIN_SIMILARITY_SCORE = 0.05
 
 DEFAULT_QUESTION = "Who owns Northbridge Industrial Components Ltd.?"
 
@@ -130,9 +132,17 @@ def cosine_similarity(vector_a: Counter, vector_b: Counter) -> float:
     return dot_product / (magnitude_a * magnitude_b)
 
 
-def retrieve_chunks(question: str, chunks: list[dict], top_k: int = TOP_K) -> list[dict]:
+def retrieve_chunks(
+    question: str,
+    chunks: list[dict],
+    top_k: int = TOP_K,
+    min_similarity_score: float = MIN_SIMILARITY_SCORE,
+) -> list[dict]:
     """
-    Rank chunks by similarity to the user question.
+    Rank chunks by similarity to the user question and filter out low-relevance results.
+
+    The minimum similarity threshold prevents zero-score or weakly related chunks
+    from being treated as usable evidence.
     """
     expanded_question = expand_query(question)
     question_vector = build_term_vector(expanded_question)
@@ -157,7 +167,13 @@ def retrieve_chunks(question: str, chunks: list[dict], top_k: int = TOP_K) -> li
         reverse=True,
     )
 
-    return ranked_chunks[:top_k]
+    relevant_chunks = [
+        chunk
+        for chunk in ranked_chunks
+        if chunk["similarity_score"] >= min_similarity_score
+    ]
+
+    return relevant_chunks[:top_k]
 
 
 def print_results(question: str, results: list[dict]) -> None:
@@ -173,7 +189,12 @@ def print_results(question: str, results: list[dict]) -> None:
             print("\nExpanded question:")
             print(expanded_question)
 
-    print(f"\nTop {len(results)} retrieved chunks:\n")
+    if not results:
+        print("\nNo relevant evidence retrieved above the similarity threshold.")
+        print(f"Minimum similarity threshold: {MIN_SIMILARITY_SCORE:.4f}")
+        return
+
+    print(f"\nTop {len(results)} retrieved chunks above threshold:\n")
 
     for rank, chunk in enumerate(results, start=1):
         print("=" * 80)
