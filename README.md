@@ -1,182 +1,164 @@
-# Compliance Risk RAG Assistant
+Compliance Risk RAG Assistant
 
-A lightweight AI/data product artifact exploring how large language models can support evidence-based compliance and third-party risk research.
+Project Summary
 
-The project is being built incrementally to demonstrate source grounding, traceability, evaluation, uncertainty handling, and human-in-the-loop product decisions.
+The Compliance Risk RAG Assistant is a source-grounded AI workflow for third-party risk and compliance research.
 
-## Problem
+The project is designed as an AI/data Product Management artifact. Its purpose is to demonstrate judgment around retrieval quality, source traceability, conflicting evidence, abstention, and human-review controls.
 
-Compliance and third-party risk teams often review information from multiple sources before deciding whether a company, supplier, or counterparty requires further investigation.
+This is not a production compliance system. It is a scoped prototype showing how a product manager might design and evaluate a source-grounded AI assistant for risk workflows.
 
-This work can be:
+Current Workflow
 
-- time-consuming;
-- repetitive;
-- difficult to audit;
-- vulnerable to inconsistent interpretation; and
-- risky when conclusions are not clearly connected to evidence.
+The current workflow is:
 
-A large language model can summarize information quickly, but a trustworthy compliance workflow requires more than a fluent answer. It must also handle missing evidence, conflicting sources, uncertainty, traceability, and human review.
+Source documents
+→ metadata parsing
+→ sentence-aware chunking
+→ processed chunks
+→ sparse retrieval baseline
+→ semantic retrieval comparison
+→ similarity thresholding
+→ retrieved evidence
+→ Claude grounded answer
+→ abstention or human review
+→ evaluation notes
 
-## Intended User
+The system uses synthetic third-party risk source documents covering corporate registry data, sanctions screening, cyber monitoring, and vendor questionnaire evidence.
 
-The intended user is a compliance, risk, trust, or third-party due diligence professional reviewing information about a company or supplier.
+Implemented
 
-The assistant is intended to help the user:
+Current implemented capabilities include:
 
-- review supplied risk information;
-- identify relevant findings;
-- connect conclusions to supporting evidence;
-- separate known facts from unknowns;
-- recognize conflicting information; and
-- determine when additional research or human review is required.
+* Synthetic third-party risk source corpus.
+* Source metadata parsing, including source ID, source name, source date, source type, and entity.
+* Sentence-aware chunking to preserve complete evidence claims and qualifiers.
+* Sparse keyword retrieval baseline with query expansion.
+* Minimum similarity thresholding to block low-relevance chunks.
+* No-relevant-evidence behavior that prevents Claude from being called when retrieval returns no usable evidence.
+* Semantic retrieval using sentence-transformers/all-MiniLM-L6-v2.
+* Sparse-vs-semantic retrieval comparison across direct fact, sanctions ambiguity, cyber risk, conflicting evidence, and missing-evidence questions.
+* Claude grounded answer generation using only retrieved evidence.
+* Structured answer format with evidence used, source references, unknowns, confidence, and human-review guidance.
+* Human-review decision table for sanctions ambiguity, unsupported allegations, conflicting cyber evidence, vendor self-report gaps, stale sources, and low retrieval confidence.
 
-This is a decision-support tool, not an autonomous compliance decision system.
+Intentionally Out of Scope
 
-## Current Workflow
+The project intentionally does not include:
 
-The first milestone establishes a basic application-to-model interaction:
+* Production deployment.
+* User interface.
+* Authentication or multi-user access.
+* Real customer or vendor data.
+* Automated final compliance decisions.
+* Replacement of human analysts.
+* Enterprise monitoring, logging, or security controls.
+* Automated citation verification.
+* Production vector database.
+* Model fine-tuning.
+* Agentic workflow orchestration.
 
-1. A Python script defines the task and prompt.
-2. The script sends the request to the Claude API.
-3. Claude generates a response.
-4. The output is captured for inspection.
-5. Product observations are documented before additional system layers are added.
+These were left out intentionally to keep the artifact focused on retrieval quality, evidence handling, evaluation, and product-control design.
 
-Current workflow:
+Key Evaluation Findings
 
-Prompt → Claude API → Model response → Manual review
+Sparse retrieval was useful as a transparent baseline
 
-Target workflow:
+The sparse retrieval baseline was easy to inspect and debug. It performed well when user questions had strong term overlap with source text or when query expansion mapped user wording to source terminology.
 
-User question → Source retrieval → Relevant evidence → Grounded response → Source references → Evaluation → Human review
+It also performed better than semantic retrieval on some abstention and conflict cases, especially the unsupported bribery/corruption question and the cyber patching conflict question.
 
-## What the Current Version Demonstrates
+Semantic retrieval improved meaning-based matching but introduced new risks
 
-### Claude API integration
+Semantic retrieval correctly retrieved expected sources for several direct evidence questions, including ownership, sanctions ambiguity, cyber risk, and missing sanctions identifiers.
 
-The application can send a request to a hosted language model and receive a response programmatically.
+However, semantic retrieval also introduced false-positive retrieval risk. For the unsupported bribery/corruption question, it returned compliance-adjacent chunks even though none supported the specific allegation.
 
-This establishes the foundation for controlling:
+This showed that semantic similarity is not the same as evidence sufficiency.
 
-- task instructions;
-- business context;
-- response format;
-- model behavior;
-- error handling; and
-- future output evaluation.
+Thresholding improved abstention behavior
 
-### Prompt and instruction design
+The Week 3 system could pass zero-score chunks to Claude and rely on the model to abstain. In Week 4, a minimum similarity threshold was added so no-relevant-evidence cases are blocked before generation.
 
-The script defines what the model should analyze and how the response should be structured.
+This changed abstention from a prompt-only behavior into a retrieval-layer product control.
 
-From a product perspective, prompt instructions influence:
+Human review is required for consequential risk decisions
 
-- relevance;
-- consistency;
-- caution;
-- explainability; and
-- reviewability.
+The human-review decision table defines when the assistant should answer, abstain, or route to analyst review.
 
-### Output inspection
+Examples include possible sanctions matches with missing identifiers, unsupported bribery/corruption allegations, conflicting vendor and cyber evidence, vendor self-reports without supporting evidence, and stale or low-confidence sources.
 
-A successful API call does not automatically mean the product result is useful or trustworthy.
+What This Project Proves
 
-Outputs must be reviewed to determine whether they are:
+This project demonstrates:
 
-- relevant;
-- factually supported;
-- appropriately cautious;
-- consistently structured; and
-- useful to the intended user.
-
-### Model capability versus product reliability
-
-The current model can generate a response, but the application does not yet automatically retrieve evidence, verify source references, measure answer quality, or route cases for review.
-
-This distinction is central to the project:
-
-- Model capability: Can the model produce a response?
-- Product reliability: Can a user verify and safely act on the response?
-
-## Product and Technical Tradeoffs
-
-### Started with the smallest working interaction
-
-I started with one functioning API request before adding document ingestion, retrieval, embeddings, or a user interface.
-
-This reduced the number of simultaneous failure points and allowed me to validate:
-
-- development environment setup;
-- API authentication;
-- request formatting;
-- model response handling; and
-- output capture.
-
-The tradeoff is that this first version has limited standalone business value. Its purpose is to create a stable foundation for grounding and evaluation.
-
-### Used a hosted model
-
-The project uses Claude through an API rather than training or fine-tuning a proprietary model.
-
-This keeps the work focused on:
-
-- product workflow;
-- evaluation;
-- traceability;
-- trust;
-- operational controls; and
-- human judgment.
-
-Tradeoffs include API cost, provider dependency, latency variability, privacy considerations, and limited control over the underlying model.
-
-### Deferred the frontend
-
-A polished interface would improve presentation but would not yet improve answer quality, grounding, or failure handling.
-
-The current priority is validating the underlying workflow before adding interface polish.
-
-### Preserved human accountability
-
-The system is intended to support a reviewer, not replace one.
-
-When evidence is incomplete, conflicting, or potentially high risk, the desired behavior is to surface uncertainty and recommend additional research or human review.
-
-## Current Status
-
-### Completed
-
-- Repository created
-- Python environment configured
-- Initial Claude API request implemented
-- First model response generated
-- Initial script committed to version control
-
-### In Progress
-
-- Baseline output capture
-- Controlled source document
-- Source-grounded model request
-- Initial evaluation examples
-- README documentation
-
-### Not Yet Implemented
-
-- Automated document retrieval
-- Chunking and embeddings
-- Vector search
-- Source-reference verification
-- Formal evaluation framework
-- Automated human-review routing
-- User interface
-- Production deployment
-
-## Next Milestone
-
-The next milestone is to provide controlled source context and test three product-critical behaviors:
-
-1. Supported answer: The model answers using supplied evidence.
-2. Insufficient evidence: The model abstains instead of inventing information.
-3. Conflicting evidence: The model identifies uncertainty and recommends human review.
-
-This step comes before full retrieval-augmented generation so that grounding, traceability, abstention, and escalation behavior can be tested with controlled inputs.
+* Understanding of source-grounded AI workflow design.
+* Metadata-preserving document processing.
+* Evidence chunking tradeoffs.
+* Sparse retrieval and semantic retrieval comparison.
+* Retrieval thresholding as a product reliability control.
+* Abstention behavior for unsupported questions.
+* Conflicting-evidence handling.
+* Source traceability and evidence inspection.
+* Human-in-the-loop workflow design for compliance/risk use cases.
+* Practical evaluation thinking for AI/data product management.
+
+What This Project Does Not Prove
+
+This project does not prove:
+
+* Production-scale RAG performance.
+* Real-world compliance decision automation.
+* Enterprise security, privacy, monitoring, or governance readiness.
+* Performance on large or messy real-world corpora.
+* Automated citation verification.
+* Human analyst replacement.
+* Machine learning model development or fine-tuning.
+* Production vector database architecture.
+* That semantic retrieval is always better than sparse retrieval.
+
+The project is intentionally scoped as an AI/data PM proof artifact, not a production ML system.
+
+Repo Guide
+
+Key files:
+
+* Scripts/03_build_chunks.py — parses source documents and creates sentence-aware chunks.
+* Scripts/04_retrieve_chunks.py — sparse keyword retrieval baseline with thresholding.
+* Scripts/05_rag_answer.py — sends retrieved evidence to Claude and blocks generation when no relevant evidence is retrieved.
+* Scripts/06_semantic_retrieve_chunks.py — semantic embedding retrieval using sentence-transformers/all-MiniLM-L6-v2.
+* Data/sources/ — synthetic source documents.
+* Data/processed_chunks.json — processed source chunks with metadata.
+* Docs/retrieval_plan_week_3.md — retrieval experiment design.
+* Docs/retrieval_notes_week_3.md — Week 3 retrieval notes.
+* Docs/week_4_lessons.md — Week 4 evidence-control lessons.
+* Docs/retrieval_evaluation_matrix_week_4.md — sparse vs semantic retrieval evaluation.
+* Docs/human_review_decision_table.md — human-review routing rules.
+* Outputs/rag_test_01_direct_fact.md — direct fact retrieval output.
+* Outputs/rag_test_02_conflicting_evidence.md — conflicting evidence output.
+* Outputs/rag_test_03_missing_evidence.md — missing evidence / abstention output.
+
+Current Limitations
+
+Known limitations:
+
+* The corpus is small and synthetic.
+* Semantic retrieval is evaluated on a limited test set.
+* The system does not yet use hybrid retrieval.
+* Source-type weighting is not implemented.
+* Query intent routing is not implemented.
+* Citation references are not automatically verified.
+* The current workflow is script-based, not a deployed product.
+* Human-review routing is documented but not implemented as an application workflow.
+* The assistant does not make final risk or compliance decisions.
+
+Next Improvements
+
+Potential next improvements:
+
+* Add a simple hybrid retrieval experiment combining sparse and semantic retrieval.
+* Add source-type weighting for sanctions, cyber, registry, vendor questionnaire, and adverse media-style sources.
+* Build a one-command demo script for core test cases.
+* Add architecture diagram and system walkthrough.
+* Expand the evaluation matrix with more source types and test questions.
+* Improve final interview talk track and portfolio presentation.
