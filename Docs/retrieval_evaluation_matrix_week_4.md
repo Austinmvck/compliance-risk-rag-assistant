@@ -87,3 +87,52 @@ The evaluation showed that sparse retrieval, semantic retrieval, and thresholdin
 I added semantic retrieval using `sentence-transformers/all-MiniLM-L6-v2` so the system could compare user questions and source chunks by meaning rather than only word overlap. I kept the sparse retrieval baseline so I could compare results instead of assuming embeddings were better.
 
 The results were mixed in a useful way. Semantic retrieval correctly found the expected source for several direct questions, but it also produced false positives on the bribery/corruption question and buried the cyber monitoring report on the patching conflict question. That taught me that semantic similarity is not the same as evidence sufficiency. For compliance workflows, retrieval needs to account for source type, question intent, conflicting evidence, and unsupported allegations. The likely next step is hybrid retrieval rather than blindly replacing sparse retrieval with embeddings.
+
+## Semantic Threshold Sweep
+
+A semantic threshold sweep was run at `0.10`, `0.20`, `0.30`, and `0.40` to test whether semantic retrieval false positives were mainly a threshold-tuning issue or a deeper evidence-sufficiency issue.
+
+The same six evaluation questions were tested:
+
+1. Who owns Northbridge Industrial Components Ltd.?
+2. Is Daniel Vermeer sanctioned?
+3. What cyber risk is associated with Northbridge?
+4. Are Northbridge systems fully patched?
+5. Did Northbridge engage in bribery or corruption?
+6. What identifiers are missing for sanctions review?
+
+### Results Summary
+
+| Threshold | Ownership | Sanctions | Cyber risk | Patching conflict | Bribery/corruption | Missing identifiers | Overall finding |
+|---:|---|---|---|---|---|---|---|
+| `0.10` | Correct top source | Correct top source | Useful evidence retrieved | Did not reliably surface both sides of the conflict | Related-but-non-answering chunks retrieved | Correct top source | Too permissive |
+| `0.20` | Correct top source | Correct top source | Useful evidence retrieved | Did not reliably surface both sides of the conflict | Related-but-non-answering chunks retrieved | Correct top source | Too permissive for unsupported allegations |
+| `0.30` | Correct top source | Correct top source | Useful evidence retrieved | Did not reliably surface both sides of the conflict | Related-but-non-answering chunks retrieved | Correct top source | Still too permissive for unsupported allegations |
+| `0.40` | Correct top source | Correct top source | Useful evidence retrieved | Became too restrictive and filtered out relevant cyber conflict evidence | Correctly returned no relevant evidence | Correct top source, but fewer supporting chunks | Safer for abstention, weaker for conflict coverage |
+
+### Key Finding
+
+The semantic retrieval false positives for the unsupported bribery/corruption question were not just barely above the original `0.20` threshold. They remained above `0.30`, with top false-positive scores around `0.35–0.38`.
+
+At `0.40`, semantic retrieval correctly returned no relevant evidence for the bribery/corruption question. However, that higher threshold also filtered out useful evidence for the patching conflict question, including the cybersecurity monitoring chunk that was needed to compare against the vendor questionnaire.
+
+This shows a key retrieval tradeoff:
+
+- Lower semantic thresholds improve recall but allow related non-answering evidence.
+- Higher semantic thresholds improve abstention but can remove evidence needed for conflict detection.
+
+### Product Lesson
+
+Semantic similarity is not the same as evidence sufficiency. A chunk can be semantically related to the entity or compliance domain while still failing to answer the specific risk question.
+
+For this project, semantic retrieval should remain an evaluated alternative rather than the default generation path. The current generation workflow should continue using sparse retrieval because it performed better on the evaluated abstention and conflict cases.
+
+A future improvement would be hybrid retrieval, source-type weighting, or query-intent routing so the system can combine semantic recall with stronger evidence controls.
+
+## Query Expansion Confound
+
+The sparse retrieval baseline benefited from hand-written query expansions that mapped user wording to expected source terminology. This helped sparse retrieval perform well on the current test set, especially for the cyber patching conflict and unsupported bribery/corruption questions.
+
+This is useful for a controlled prototype, but it may not scale to broader real-world usage. A larger system would need broader synonym handling, query-intent routing, hybrid retrieval, reranking, source-type-aware retrieval, or analyst feedback loops.
+
+For that reason, the sparse retrieval results should be interpreted as a strong transparent baseline, not proof that sparse retrieval is generally superior to semantic retrieval.
