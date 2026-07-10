@@ -106,3 +106,11 @@ Is Daniel Vermeer sanctioned?
 Are Northbridge systems fully patched?
 Did Northbridge engage in bribery or corruption?
 Should Northbridge be approved as a vendor?
+```
+## Interview Explanation
+
+The final demo test set is designed to show more than successful RAG answers.
+
+It tests whether the system can answer when evidence exists, abstain when evidence is missing, identify conflicting sources, avoid overclaiming ambiguous sanctions evidence, and route high-consequence cases to human review.
+
+The key product lesson is that AI evaluation for risk workflows needs to measure evidence sufficiency and workflow safety, not just answer fluency.
