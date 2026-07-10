@@ -6,7 +6,7 @@ The Compliance Risk RAG Assistant is a source-grounded AI workflow for third-par
 
 The project is designed as an AI/data Product Management artifact. Its purpose is to demonstrate judgment around retrieval quality, source traceability, conflicting evidence, abstention, evidence sufficiency, and human-review controls.
 
-This is not a production compliance system. It is a scoped prototype showing how a product manager might design and evaluate a source-grounded AI assistant for risk workflows.
+This is not a production compliance system. It is a scoped prototype showing how a product leader might design and evaluate a source-grounded AI assistant for risk workflows.
 
 ## Start Here
 
