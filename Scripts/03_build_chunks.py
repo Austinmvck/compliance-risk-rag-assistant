@@ -21,7 +21,6 @@ SOURCE_DIR = PROJECT_ROOT / "Data" / "sources"
 OUTPUT_FILE = PROJECT_ROOT / "Data" / "processed_chunks.json"
 
 CHUNK_SIZE = 700
-CHUNK_OVERLAP = 120
 
 
 def parse_source_file(file_path: Path) -> dict:

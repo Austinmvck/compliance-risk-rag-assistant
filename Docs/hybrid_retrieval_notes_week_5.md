@@ -24,3 +24,4 @@ RRF combines ranked outputs instead of raw scores.
 
 ```text
 RRF score = 1 / (k + sparse_rank) + 1 / (k + semantic_rank)
+```
