@@ -1,230 +1,481 @@
 # Compliance Risk RAG Assistant
 
-## Project Summary
+A source-grounded AI prototype for third-party risk and compliance research.
 
-The Compliance Risk RAG Assistant is a source-grounded AI workflow for third-party risk and compliance research.
+This project explores how a retrieval-augmented generation workflow can help analysts synthesize evidence from corporate registry, sanctions-screening, cybersecurity-monitoring, and vendor-questionnaire sources while preserving source traceability, abstaining when evidence is insufficient, and routing consequential decisions to human review.
 
-The project is designed as an AI/data Product Management artifact. Its purpose is to demonstrate judgment around retrieval quality, source traceability, conflicting evidence, abstention, evidence sufficiency, and human-review controls.
+This is an AI/Data Product Management proof artifact, not a production compliance system.
 
-This is not a production compliance system. It is a scoped prototype showing how a product leader might design and evaluate a source-grounded AI assistant for risk workflows.
+## Project Thesis
+
+The core lesson from the project is:
+
+```text
+Correct retrieval does not guarantee correct product behavior.
+```
+
+The system performed well when evidence was direct or absent. The hardest cases occurred when relevant evidence existed but required disciplined interpretation.
+
+The final evaluation exposed three distinct post-retrieval risks:
+
+- a source-scoped sanctions result became a broader clearance claim
+- conflicting evidence from different dates was resolved too definitively
+- the model rendered a vendor recommendation outside its intended decision authority
+
+The resulting product priorities were:
+
+- claim-scope control
+- temporal-uncertainty preservation
+- consequential-decision restrictions
+- deterministic pre-generation abstention
+- human-review guidance
 
 ## Start Here
 
-For a quick review of the project, read these files in order:
+For a fast review, read these files in order:
 
-1. [Architecture Diagram](Docs/architecture_diagram.md) — shows how evidence moves through the system, which retrieval path currently feeds Claude, where abstention occurs, and where semantic and hybrid retrieval fit as evaluated alternatives.
-2. [Product Tradeoffs](Docs/product_tradeoffs.md) — explains why sparse retrieval remains the current generation default, why semantic retrieval and hybrid retrieval were evaluated but not defaulted, and why the project avoids overbuilding.
-3. [System Walkthrough](Docs/system_walkthrough.md) — walks through what happens when a user asks a question, including evidence retrieval, thresholding, generation, abstention, and human review.
-4. [Retrieval Evaluation Matrix](Docs/retrieval_evaluation_matrix_week_4.md) — documents retrieval behavior across direct evidence, conflicting evidence, missing evidence, and semantic threshold testing.
-5. [Human Review Decision Table](Docs/human_review_decision_table.md) — defines when the system should route to analyst review instead of treating an answer as final.
-6. [Hybrid Retrieval Notes](Docs/hybrid_retrieval_notes_week_5.md) — summarizes the hybrid Reciprocal Rank Fusion retrieval experiment and why it was tested but deferred as the default path.
-7. [Week 4 Closeout](Docs/week_4_closeout.md) — summarizes the Week 4 evidence-control and retrieval-evaluation work.
+1. [Architecture Diagram](Docs/architecture_diagram.md) — current generation path, retrieval alternatives, abstention point, and human-review boundary.
+2. [System Walkthrough](Docs/system_walkthrough.md) — end-to-end explanation of what happens when a user asks a question.
+3. [Final Evaluation Results](Outputs/final_eval_results.md) — scoring methodology, 15-case results, failure analysis, product findings, and limitations.
+4. [Final Full Evaluation Output](Outputs/final_full_eval_run_output.md) — complete recorded output for all 15 scenarios.
+5. [Product Tradeoffs](Docs/product_tradeoffs.md) — retrieval, scope, safety, and architecture decisions.
+6. [Human Review Decision Table](Docs/human_review_decision_table.md) — when the workflow should answer, abstain, or escalate.
+7. [Hybrid Retrieval Notes](Docs/hybrid_retrieval_notes_week_5.md) — Reciprocal Rank Fusion experiment and why hybrid retrieval was deferred as the default.
+
+For a short live walkthrough:
+
+- [Final Demo Tests](Outputs/final_demo_tests.md)
+- [Recorded Five-Question Demo Output](Outputs/final_demo_run_output.md)
+- `Scripts/run_demo_tests.py`
+
+## Problem
+
+Third-party risk research often requires analysts to interpret evidence from multiple sources with different levels of authority, freshness, and completeness.
+
+A relevant source is not always sufficient to support a conclusion.
+
+Examples include:
+
+- an unconfirmed sanctions name match without identity identifiers
+- a vendor self-report that conflicts with later external monitoring
+- no retrieved evidence for an allegation
+- a request for a final vendor approval or risk decision
+
+The prototype was designed to test whether an AI-assisted workflow could:
+
+- retrieve relevant evidence
+- preserve source metadata
+- answer direct factual questions
+- identify ambiguous or conflicting evidence
+- abstain when evidence is missing
+- avoid treating no evidence as low risk
+- cite the evidence used
+- route consequential decisions to human review
 
 ## Current Workflow
 
-The current generation workflow is:
-
 ```text
-Source documents
+Synthetic source documents
 → metadata extraction
 → sentence-aware chunking
-→ processed chunks
+→ processed evidence chunks
 → sparse retrieval
-→ similarity thresholding
+→ minimum similarity threshold
 → retrieved evidence package
-→ Claude grounded answer or abstention
-→ human-review guidance
+→ Claude grounded answer or pre-generation abstention
+→ evidence, sources, unknowns, confidence, and human-review guidance
 ```
 
-The system uses synthetic third-party risk source documents covering corporate registry data, sanctions screening, cyber monitoring, and vendor questionnaire evidence.
+Semantic and hybrid retrieval were implemented as evaluated alternatives but do not feed Claude by default.
 
-Semantic retrieval and hybrid retrieval are implemented and evaluated, but they do not feed Claude by default.
-
-## Current Retrieval Decision
+## Retrieval Decision
 
 The current generation path is:
 
 ```text
-sparse retrieval → thresholding → Claude grounded answer
+Sparse retrieval
+→ thresholding
+→ Claude grounded answer or abstention
 ```
 
-Semantic retrieval and hybrid retrieval are implemented and evaluated, but they do not feed Claude by default.
-
-The current decision is:
+The scoped product decision is:
 
 ```text
 Sparse retrieval = current generation default
 Semantic retrieval = evaluated alternative
-Hybrid retrieval = tested with RRF and deferred
+Hybrid retrieval = tested with Reciprocal Rank Fusion and deferred
 ```
 
-This decision is based on evidence behavior in the evaluation set. Sparse retrieval performed more safely on unsupported allegation handling, while semantic and hybrid retrieval introduced or preserved related-but-non-answering evidence failure modes.
+Sparse retrieval was retained for the tested workflow because it behaved more safely on unsupported allegations.
 
-## Implemented
+Semantic and hybrid retrieval improved meaning-based matching or conflict coverage in some cases, but they also preserved related-but-non-answering evidence risks.
 
-Current implemented capabilities include:
+This is not a general claim that sparse retrieval is universally superior.
 
-- Synthetic third-party risk source corpus.
-- Source metadata extraction, including source ID, source name, source date, source type, and entity.
-- Sentence-aware chunking to preserve complete evidence claims and qualifiers.
-- Sparse keyword retrieval baseline with query expansion.
-- Minimum similarity thresholding to block low-relevance chunks.
-- No-relevant-evidence behavior that prevents Claude from being called when retrieval returns no usable evidence.
+## Implemented Capabilities
+
+- Synthetic corporate registry, sanctions, cybersecurity, and vendor-questionnaire corpus.
+- Source metadata extraction:
+  - source ID
+  - source name
+  - source date
+  - source type
+  - entity
+- Sentence-aware document chunking.
+- Sparse keyword retrieval with query expansion.
+- Minimum similarity thresholding.
+- Pre-generation abstention when no usable evidence is retrieved.
+- Claude answer generation using retrieved evidence only.
+- Structured answer output containing:
+  - answer
+  - evidence used
+  - source references
+  - unknowns or conflicts
+  - confidence
+  - human-review guidance
 - Semantic retrieval using `sentence-transformers/all-MiniLM-L6-v2`.
-- Semantic threshold testing across direct evidence, conflicting evidence, missing evidence, and unsupported allegation cases.
-- Hybrid retrieval experiment using Reciprocal Rank Fusion.
-- Sparse-vs-semantic-vs-hybrid retrieval evaluation across direct fact, sanctions ambiguity, cyber risk, conflicting evidence, and missing-evidence questions.
-- Claude grounded answer generation using only retrieved evidence.
-- Structured answer format with evidence used, source references, unknowns, confidence, and human-review guidance.
-- Human-review decision table for sanctions ambiguity, unsupported allegations, conflicting cyber evidence, vendor self-report gaps, stale sources, and low retrieval confidence.
-- Architecture diagram explaining current generation flow and evaluated retrieval alternatives.
-- Product tradeoffs document explaining why sparse retrieval remains the default path.
-- System walkthrough explaining runtime behavior for ownership, sanctions ambiguity, cyber patching conflict, and unsupported bribery/corruption questions.
+- Semantic threshold testing.
+- Hybrid retrieval using Reciprocal Rank Fusion.
+- Sparse, semantic, and hybrid retrieval comparison on controlled cases.
+- Five-question live demo runner.
+- Fifteen-question full evaluation runner.
+- Captured demo and full-evaluation outputs.
+- Structured qualitative scoring and failure taxonomy.
+- Architecture, tradeoff, walkthrough, and human-review documentation.
+
+## Evaluation Design
+
+The final evaluation contains 15 controlled scenarios covering:
+
+- direct ownership facts
+- beneficial-owner relationships
+- ambiguous sanctions matches
+- missing identity identifiers
+- company sanctions status
+- conflicting cyber evidence
+- vendor self-reporting
+- unsupported bribery and fraud allegations
+- inference limits
+- vendor approval requests
+- overall risk classification
+
+The evaluation assessed:
+
+- required evidence retrieval
+- evidence sufficiency
+- material-claim support
+- source attribution
+- abstention behavior
+- conflict handling
+- human-review routing
+- claim scope
+- temporal uncertainty
+- decision authority
+
+Scoring was performed by the project author against predefined expected behavior and was not independently verified.
+
+This is a controlled qualitative evaluation, not a statistically validated benchmark.
+
+## Final Evaluation Results
+
+All 15 planned scenarios were executed through the sparse generation path.
+
+```text
+Pass:    12 / 15
+Partial:  3 / 15
+Fail:     0 / 15
+```
+
+These figures describe author-scored qualitative behavior and should not be interpreted as production accuracy.
+
+### Strongest Behaviors
+
+- Direct factual grounding.
+- Source attribution.
+- Missing-identifier explanation.
+- Sanctions ambiguity handling.
+- Conflict retrieval.
+- Abstention on unsupported allegations.
+- Refusal to infer undisclosed subsidiaries.
+- Refusal to issue an unsupported overall low-risk classification.
+
+### Partial Results
+
+#### T6 — Claim-Scope Overclaim
+
+The source said no exact company match was found in the available screening report.
+
+The answer broadened that into:
+
+```text
+Northbridge Industrial Components Ltd. is not sanctioned.
+```
+
+The retrieval was correct, but the answer exceeded the source scope.
+
+#### T7 — Temporal Over-Resolution
+
+The system retrieved both:
+
+- an April vendor self-report that systems were patched
+- a May monitoring report identifying one outdated internet-facing service
+
+The answer concluded broadly that Northbridge systems were not fully patched.
+
+The response did not fully preserve the difference between:
+
+- earlier state
+- later observed state
+- current unknown state
+- one affected service
+- the complete system estate
+
+#### T14 — Decision Overreach
+
+The system retrieved the correct vendor and cyber evidence, identified the conflict, stated unknowns, and required human review.
+
+However, it still recommended that the vendor not be approved.
+
+The assistant was intended to support an analyst, not render the final vendor decision.
+
+## Cross-Scenario Findings
+
+### Direct Evidence and Abstention Were Strong
+
+The workflow behaved reliably when:
+
+- explicit source text answered the question
+- no relevant evidence was available
+
+For unsupported bribery, fraud, subsidiary, and overall-risk questions, thresholding blocked Claude before generation.
+
+This made abstention a system control rather than a prompt-only request.
+
+### Relevant Evidence Can Still Produce Unsafe Output
+
+T6, T7, and T14 all retrieved relevant evidence.
+
+The remaining issues occurred after retrieval:
+
+```text
+correct evidence
+≠ correctly scoped claim
+≠ correctly timed conclusion
+≠ authorized decision
+```
+
+The product therefore needs to evaluate not only retrieval and grounding, but whether the system took the correct action.
+
+## Product Controls Identified
+
+### Claim-Scope Control
+
+When a source reports no match, the answer should describe the scope of that source and screening result rather than implying universal clearance.
+
+### Temporal-Conflict Control
+
+When evidence differs across dates, the answer should separate:
+
+- earlier evidence
+- later evidence
+- current unknown state
+
+### Consequential-Decision Control
+
+The system should not:
+
+- approve vendors
+- reject vendors
+- issue sanctions clearance
+- assign final risk classifications
+
+It should:
+
+- summarize evidence
+- identify unresolved risks
+- state missing information
+- recommend follow-up evidence
+- route the decision to an authorized human reviewer
+
+### Post-Generation Policy Evaluation
+
+A future policy check should detect whether an answer:
+
+- exceeds source scope
+- ignores temporal limits
+- treats absence of evidence as proof
+- makes a prohibited final decision
+- cites evidence that does not support the claim
+
+## Running the Project
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Austinmvck/compliance-risk-rag-assistant.git
+cd compliance-risk-rag-assistant
+```
+
+### 2. Create and activate a virtual environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure the Anthropic API key
+
+```bash
+cp .env.example .env
+```
+
+Then replace the placeholder in `.env`:
+
+```text
+ANTHROPIC_API_KEY=your_api_key_here
+```
+
+Do not commit `.env`.
+
+### 5. Build processed chunks
+
+```bash
+python3 Scripts/03_build_chunks.py
+```
+
+### 6. Run a single grounded question
+
+```bash
+python3 Scripts/05_rag_answer.py "Is Daniel Vermeer sanctioned?"
+```
+
+### 7. Run the five-question demo
+
+```bash
+python3 Scripts/run_demo_tests.py
+```
+
+### 8. Run the full 15-question evaluation
+
+```bash
+python3 Scripts/run_full_evaluation.py
+```
+
+To capture a new run:
+
+```bash
+python3 Scripts/run_full_evaluation.py > Outputs/final_full_eval_run_output.md
+```
+
+Model responses can vary across repeated runs.
+
+## Repository Guide
+
+### Core Scripts
+
+- `Scripts/03_build_chunks.py` — parses source documents and creates metadata-preserving chunks.
+- `Scripts/04_retrieve_chunks.py` — sparse keyword retrieval and thresholding.
+- `Scripts/05_rag_answer.py` — current generation path and pre-generation abstention.
+- `Scripts/06_semantic_retrieve_chunks.py` — semantic embedding retrieval.
+- `Scripts/07_hybrid_retrieve_chunks.py` — hybrid Reciprocal Rank Fusion experiment.
+- `Scripts/run_demo_tests.py` — five representative interview/demo scenarios.
+- `Scripts/run_full_evaluation.py` — complete 15-scenario evaluation runner.
+
+### Data
+
+- `Data/sources/` — synthetic source documents.
+- `Data/processed_chunks.json` — processed evidence chunks with metadata.
+
+### Core Documentation
+
+- `Docs/architecture_diagram.md`
+- `Docs/system_walkthrough.md`
+- `Docs/product_tradeoffs.md`
+- `Docs/human_review_decision_table.md`
+- `Docs/retrieval_evaluation_matrix_week_4.md`
+- `Docs/hybrid_retrieval_notes_week_5.md`
+
+### Evaluation Outputs
+
+- `Outputs/final_demo_tests.md`
+- `Outputs/final_demo_run_output.md`
+- `Outputs/final_full_eval_run_output.md`
+- `Outputs/final_eval_results.md`
+
+## What This Project Demonstrates
+
+- Source-grounded AI workflow design.
+- Metadata-preserving document processing.
+- Retrieval-method experimentation.
+- Evidence-sufficiency evaluation.
+- Threshold-based abstention.
+- Source traceability.
+- Conflicting-evidence handling.
+- Human-review and decision-boundary design.
+- Failure taxonomy development.
+- AI product tradeoff analysis.
+- Translation of evaluation findings into product controls.
 
 ## Intentionally Out of Scope
 
-The project intentionally does not include:
+The project does not include:
 
-- Production deployment.
-- User interface.
-- Authentication or multi-user access.
-- Real customer or vendor data.
-- Automated final compliance decisions.
-- Replacement of human analysts.
-- Enterprise monitoring, logging, or security controls.
-- Automated citation verification.
-- Production vector database.
-- Model fine-tuning.
-- Agentic workflow orchestration.
+- production deployment
+- a user interface
+- authentication or multi-user access
+- real customer or vendor data
+- automated final compliance decisions
+- replacement of human analysts
+- production monitoring or security controls
+- automatic citation verification
+- a production vector database
+- model training or fine-tuning
+- production case-management or reviewer-routing workflows
+- autonomous agent orchestration
 
-These were left out intentionally to keep the artifact focused on retrieval quality, evidence handling, evaluation, and product-control design.
+These items were excluded to keep the v1 artifact focused on retrieval behavior, evidence interpretation, abstention, evaluation, and product controls.
 
-## Key Evaluation Findings
-
-### Sparse retrieval was useful as a transparent baseline
-
-The sparse retrieval baseline was easy to inspect and debug. It performed well when user questions had strong term overlap with source text or when query expansion mapped user wording to source terminology.
-
-It also performed better than semantic retrieval on some abstention and conflict cases, especially the unsupported bribery/corruption question and the cyber patching conflict question.
-
-### Semantic retrieval improved meaning-based matching but introduced new risks
-
-Semantic retrieval correctly retrieved expected sources for several direct evidence questions, including ownership, sanctions ambiguity, cyber risk, and missing sanctions identifiers.
-
-However, semantic retrieval also introduced false-positive retrieval risk. For the unsupported bribery/corruption question, it returned compliance-adjacent chunks even though none supported the specific allegation.
-
-This showed that semantic similarity is not the same as evidence sufficiency.
-
-### Hybrid retrieval improved coverage but did not solve evidence sufficiency
-
-Hybrid retrieval was tested using Reciprocal Rank Fusion because sparse retrieval scores and semantic embedding scores are not directly comparable.
-
-Hybrid retrieval improved conflict coverage, especially for the patching question because it surfaced both the vendor questionnaire and the later cybersecurity monitoring report.
-
-However, hybrid retrieval still returned related-but-non-answering chunks for the unsupported bribery/corruption question. Because it did not solve evidence sufficiency, it is documented as an evaluated alternative and deferred as the default generation path.
-
-### Thresholding improved abstention behavior
-
-The Week 3 system could pass zero-score chunks to Claude and rely on the model to abstain. In Week 4, a minimum similarity threshold was added so no-relevant-evidence cases are blocked before generation.
-
-This changed abstention from a prompt-only behavior into a retrieval-layer product control.
-
-### Human review is required for consequential risk decisions
-
-The human-review decision table defines when the assistant should answer, abstain, or route to analyst review.
-
-Examples include possible sanctions matches with missing identifiers, unsupported bribery/corruption allegations, conflicting vendor and cyber evidence, vendor self-reports without supporting evidence, and stale or low-confidence sources.
-
-## What This Project Proves
-
-This project demonstrates:
-
-- Understanding of source-grounded AI workflow design.
-- Metadata-preserving document processing.
-- Evidence chunking tradeoffs.
-- Sparse, semantic, and hybrid retrieval evaluation.
-- Retrieval thresholding as a product reliability control.
-- Abstention behavior for unsupported questions.
-- Conflicting-evidence handling.
-- Source traceability and evidence inspection.
-- Human-in-the-loop workflow design for compliance/risk use cases.
-- Practical evaluation thinking for AI/data product management.
-- Product judgment around current-state versus evaluated-alternative system design.
-
-## What This Project Does Not Prove
-
-This project does not prove:
-
-- Production-scale RAG performance.
-- Real-world compliance decision automation.
-- Enterprise security, privacy, monitoring, or governance readiness.
-- Performance on large or messy real-world corpora.
-- Automated citation verification.
-- Human analyst replacement.
-- Machine learning model development or fine-tuning.
-- Production vector database architecture.
-- That semantic retrieval is always better than sparse retrieval.
-- That hybrid retrieval automatically solves evidence sufficiency.
-
-The project is intentionally scoped as an AI/data PM proof artifact, not a production ML system.
-
-## Repo Guide
-
-Key scripts:
-
-- `Scripts/03_build_chunks.py` — parses source documents and creates sentence-aware chunks.
-- `Scripts/04_retrieve_chunks.py` — sparse keyword retrieval baseline with thresholding.
-- `Scripts/05_rag_answer.py` — sends retrieved evidence to Claude and blocks generation when no relevant evidence is retrieved.
-- `Scripts/06_semantic_retrieve_chunks.py` — semantic embedding retrieval using `sentence-transformers/all-MiniLM-L6-v2`.
-- `Scripts/07_hybrid_retrieve_chunks.py` — hybrid retrieval experiment using Reciprocal Rank Fusion.
-
-Key data files:
-
-- `Data/sources/` — synthetic source documents.
-- `Data/processed_chunks.json` — processed source chunks with metadata.
-
-Key documentation:
-
-- `Docs/architecture_diagram.md` — current architecture and retrieval-method layout.
-- `Docs/product_tradeoffs.md` — product and system design tradeoffs.
-- `Docs/system_walkthrough.md` — end-to-end runtime walkthrough.
-- `Docs/retrieval_plan_week_3.md` — retrieval experiment design.
-- `Docs/retrieval_notes_week_3.md` — Week 3 retrieval notes.
-- `Docs/week_4_lessons.md` — Week 4 evidence-control lessons.
-- `Docs/retrieval_evaluation_matrix_week_4.md` — sparse vs semantic retrieval evaluation and threshold findings.
-- `Docs/hybrid_retrieval_notes_week_5.md` — hybrid RRF retrieval experiment notes.
-- `Docs/human_review_decision_table.md` — human-review routing rules.
-- `Docs/week_4_closeout.md` — Week 4 closeout summary.
-
-Key outputs:
-
-- `Outputs/rag_test_01_direct_fact.md` — direct fact retrieval output.
-- `Outputs/rag_test_02_conflicting_evidence.md` — conflicting evidence output.
-- `Outputs/rag_test_03_missing_evidence.md` — missing evidence / abstention output.
-
-## Current Limitations
-
-Known limitations:
+## Limitations
 
 - The corpus is small and synthetic.
-- Semantic retrieval is evaluated on a limited test set.
-- Hybrid retrieval is implemented as an evaluated experiment, but it is not the default generation path.
-- Source-type weighting is not implemented.
-- Query-intent routing is not implemented.
-- Citation references are not automatically verified.
-- The current workflow is script-based, not a deployed product.
-- Human-review routing is documented but not implemented as an application workflow.
-- The assistant does not make final risk or compliance decisions.
+- The evaluation is author-scored and not independently verified.
+- The 15 scenarios are controlled and not statistically representative.
+- Several questions reuse the same underlying source facts.
+- The full 15-case evaluation was run through the sparse generation path, not all three retrieval methods.
+- Results depend on the current corpus, threshold, prompt, and model version.
+- Model output may vary across repeated runs.
+- Citation references are displayed but not automatically verified.
+- Human-review behavior is represented in responses, not implemented as a production workflow.
+- The project does not evaluate production latency, cost, security, multilingual behavior, adversarial prompting, or large-corpus performance.
 
-## Next Improvements
+## Potential V2 Improvements
 
-Potential next improvements:
+- Machine-readable evaluation dataset.
+- Repeated trials to measure model variability.
+- Required, optional, and distractor-chunk labels.
+- Retrieval recall and complete-evidence coverage metrics.
+- Abstention precision and recall.
+- Claim-level citation verification.
+- Temporal-reasoning tests.
+- Source-authority rules.
+- Prohibited-decision detection.
+- Post-generation policy evaluation.
+- Prompt regression testing.
+- Full 15-case semantic and hybrid comparisons.
+- Independent or blinded scoring.
 
-- Build a one-command demo script for core test cases.
-- Expand the final demo/evaluation table with more answerable, partially answerable, and unanswerable questions.
-- Add source-type weighting for sanctions, cyber, registry, vendor questionnaire, and adverse media-style sources.
-- Add query-intent routing so different question types can prioritize different source types.
-- Add reranking or evidence-sufficiency scoring to reduce related-but-non-answering retrieval.
-- Add automated citation verification.
-- Improve final interview talk track and portfolio presentation.
-- Add final resume and LinkedIn positioning language.
+These are future maturity improvements, not requirements for the completed v1 artifact.
+
+## Project Status
+
+```text
+V1 prototype and structured evaluation complete.
+```
+
+The project is now in packaging and interview-use mode rather than active feature development.
