@@ -44,7 +44,7 @@ A useful compliance AI workflow needs explicit rules for when the system should 
 
 This is especially important in third-party risk and compliance workflows because false positives, false negatives, stale sources, unsupported allegations, and conflicting evidence can all create downstream decision risk.
 
-## Ownership Notes for Key Human-Review Rows
+## Observational Notes for Key Human-Review Rows
 
 ### 1. Possible sanctions name match
 
