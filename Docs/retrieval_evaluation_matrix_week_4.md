@@ -82,7 +82,7 @@ Semantic similarity can find meaningfully related text, but in compliance workfl
 
 The evaluation showed that sparse retrieval, semantic retrieval, and thresholding each solve different problems. A stronger product design may combine them rather than assuming semantic retrieval should replace sparse retrieval.
 
-## Interview Explanation
+## Product Explanation
 
 I added semantic retrieval using `sentence-transformers/all-MiniLM-L6-v2` so the system could compare user questions and source chunks by meaning rather than only word overlap. I kept the sparse retrieval baseline so I could compare results instead of assuming embeddings were better.
 

@@ -8,7 +8,7 @@ The goal is not only to describe what was built, but to explain why specific des
 
 This project is a source-grounded RAG prototype for third-party risk and compliance research. It is intentionally scoped to demonstrate evidence handling, retrieval evaluation, abstention, conflicting-evidence handling, and human-review design.
 
-## Block 2 Lesson
+## Core Product Lesson
 
 The main lesson from this block is that product tradeoffs are not just technical preferences. They explain how the product should behave when the system faces uncertainty, incomplete evidence, conflicting sources, or high-consequence decisions.
 

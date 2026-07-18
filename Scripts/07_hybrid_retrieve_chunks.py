@@ -3,9 +3,7 @@ Hybrid retrieval experiment using Reciprocal Rank Fusion (RRF).
 
 Purpose:
 - Compare sparse retrieval and semantic retrieval without averaging raw scores.
-- Sparse TF-IDF scores and semantic embedding cosine scores are on different scales.
-- RRF combines ranked results instead of raw similarity scores.
-
+Sparse lexical retrieval scores and semantic embedding cosine scores are on different scales.- RRF combines ranked results instead of raw similarity scores.
 This script is experimental and does not feed Claude directly.
 The current generation path remains Scripts/05_rag_answer.py using sparse retrieval.
 """

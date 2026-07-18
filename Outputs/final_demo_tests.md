@@ -8,7 +8,7 @@ The goal is to show how the prototype behaves across supported, ambiguous, confl
 
 This is not a production evaluation suite. It is a focused demo/evaluation table designed to make the system easier to test, explain, and discuss in interviews.
 
-## Week 6 Block 1 Lesson
+## Product Lesson
 
 The main lesson from this block is that a RAG demo should not only show successful answers.
 
@@ -107,7 +107,8 @@ Are Northbridge systems fully patched?
 Did Northbridge engage in bribery or corruption?
 Should Northbridge be approved as a vendor?
 ```
-## Interview Explanation
+
+## Product Explanation
 
 The final demo test set is designed to show more than successful RAG answers.
 

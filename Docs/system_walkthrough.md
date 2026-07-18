@@ -8,7 +8,7 @@ The goal is to explain the runtime workflow: how the system receives a question,
 
 This walkthrough reflects the current prototype. It does not describe a production workflow.
 
-## Block 3 Lesson
+## Core Product Lesson
 
 The main lesson from this block is that a RAG system is not just retrieval plus generation.
 
@@ -394,7 +394,7 @@ For third-party risk and compliance use cases, the system must distinguish betwe
 
 The system should only answer when evidence is sufficient. Otherwise, it should abstain or route to human review.
 
-## Interview Explanation
+## Product Explanation
 
 The walkthrough starts with a user question, then loads processed chunks that preserve source metadata. The current path uses sparse retrieval to identify relevant evidence. The system applies thresholding before generation, so Claude is only called if relevant evidence is found.
 
