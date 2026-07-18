@@ -437,7 +437,7 @@ Potential v2 improvements include:
 
 These are future maturity improvements, not blockers for the current v1 artifact.
 
-## Interview Explanation
+## Product Explanation
 
 I created and executed a controlled fifteen-scenario evaluation covering direct factual questions, ambiguous sanctions matches, conflicting cybersecurity evidence, unsupported allegations, inference limits, and consequential vendor decisions.
 
