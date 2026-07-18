@@ -201,7 +201,7 @@ def main():
     except Exception as error:
         print("Error running RAG answer script:")
         print(error)
-
+        raise SystemExit(1)
 
 if __name__ == "__main__":
     main()

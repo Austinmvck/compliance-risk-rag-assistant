@@ -56,7 +56,7 @@ def run_question(question: str) -> subprocess.CompletedProcess:
         cwd=REPO_ROOT,
         text=True,
         capture_output=True,
-        check=False,
+        check=True,
     )
 
 
