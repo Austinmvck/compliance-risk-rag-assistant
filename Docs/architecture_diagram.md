@@ -219,7 +219,7 @@ The product needs:
 
 The most important architectural decision is that the system separates the current generation path from evaluated retrieval experiments.
 
-## Interview Explanation
+## Product Explanation
 
 I designed the architecture to separate the current generation path from evaluated retrieval alternatives.
 
@@ -228,4 +228,4 @@ The current system uses sparse retrieval as the default path into Claude because
 Semantic retrieval improved meaning-based matching but introduced related-but-non-answering evidence. Hybrid retrieval improved conflict coverage using Reciprocal Rank Fusion, but it still failed the unsupported bribery/corruption test. Because of that, sparse remains the current generation default while semantic and hybrid retrieval are documented as evaluated alternatives.
 
 The main product lesson is that retrieval architecture has to reflect evidence sufficiency, not just relevance. In risk workflows, the system must know when to answer, abstain, or route to human review.
-```
+
