@@ -429,7 +429,7 @@ Route ambiguous, conflicting, or high-consequence cases to human review.
 Avoid production features that do not prove the core product judgment.
 ```
 
-## Interview Explanation
+## Product Explanation
 
 The biggest product tradeoff was choosing the safest retrieval path instead of the most advanced-sounding one.
 
