@@ -12,24 +12,27 @@ I chose to test controlled grounding first so that evidence use, abstention, tra
 
 ## Evaluation Summary
 
-| Test | Expected behavior | Actual behavior | Result | Product implication |
+## Evaluation Summary
+
+| Test | Expected behavior | Actual behavior | Result | Product implications |
 |---|---|---|---|---|
-| Supported evidence | Identify supported risks with source references and appropriate uncertainty | [Complete after reviewing output] | Pass / Partial / Fail | Determines whether the model can create a reviewable risk summary from supplied evidence | | Insufficient evidence | Abstain and avoid unsupported allegations | [Complete after reviewing output] | Pass / Partial / Fail | Tests whether the workflow reduces hallucination and reputational risk | | Conflicting evidence | Surface the contradiction without choosing a source | [Complete after reviewing output] | Pass / Partial / Fail | Tests whether the workflow preserves uncertainty and supports escalation |
+| Supported evidence | Will identify supported compliance risks, will reference the supplied sources, it will distinguish confirmed facts from unresolved risks, acknowledge uncertainty levels and confidence, and recommend human review. | The model identified possible sanctions-name match, while clearly stated that it was unconfirmed, referenced the supplied source labels, stated material unknowns and confidence levels, and recommended targeted human-review actions. | Pass | Controlled grounding could produce a structured, reviewable risk summary when the relevant evidence is supplied and explicit. This concluded that the model could use approved context before retrieval complexity is introduced. |
+| Insufficient evidence | Explicitly state that the available evidence is insufficient, avoid making and implying an unsupported bribery or corruption allegation, explain that the supplied sources do not answer the question, and recommend further research without making judgment. | The model explicitly stated that there was insufficient evidence, avoided unsupported allegations, Explain that none of the supplied sources addressed bribery or corruption, identified missing information, and recommended additional diligence. The follow-up actions are directionally appropriate realative to the asked question | Pass | Controlled grounding reduced unsupported generation and showed that the model could abstain when the evidence did not support a conclusion. The test also showed that escalation guidance should remain in relation to the specific question. |
+| Conflicting evidence | Identify the conflict between the vendor questionnaire and external cyber-monitoring report, accurately describe both sources, avoid deciding which source is correct, explain what remains unknown, request independent verification or remediation evidence, and recommend human review. | The model identified and accurately represented both conflicting sources, stated that the technology was not confirmed to be fully patched, maintianed uncertainty about why the sources differed, described possible explanations, identified the missing remediation evidence, and recommended independent verification and human review. | Pass | Controlled grounding handled conflicting evidence effectively when both sides were explicitly included in the context. The result supported moving to retrieval testing, where the next challenge was whether the system could reliably find all required conflicting evidence on its own. |
 
 ## Initial Findings
 
 ### What Worked
 
-- [Example: The model consistently referenced supplied source labels.]
-- [Example: It distinguished a potential sanctions match from a confirmed match.]
-- [Example: It surfaced the cybersecurity conflict.]
+- Did a good job abstaining from unsupported evidence claims
+- Identified conflicts with good accuracy
+- Model did of great job in the traceability of the data it considered evidence
 
 ### What Did Not Work Reliably
 
-- [Record any vague source references.]
-- [Record any unsupported statement.]
-- [Record any inconsistent confidence level.]
-- [Record whether “human review required” was too broad or too weak.]
+- Didnt test measure the retrival quality since all evidence was supplied dirrectly
+- Small cases which present huge limitations and what you can actually observe
+- Confidence levels doesnt have a scale to measure on what is sufficent enough
 
 ### Product Implications
 
