@@ -7,6 +7,8 @@ through Scripts/05_rag_answer.py for the five highest-value demo questions.
 The goal is repeatability for interviews and project review, not production testing.
 """
 
+from datetime import datetime, timezone
+import platform
 import subprocess
 import sys
 from pathlib import Path
@@ -14,6 +16,16 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RAG_SCRIPT = REPO_ROOT / "Scripts" / "05_rag_answer.py"
+
+def get_git_commit() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=REPO_ROOT,
+            text=True,
+        ).strip()
+    except Exception:
+        return "unknown"
 
 DEMO_QUESTIONS = [
     {
@@ -66,7 +78,19 @@ def print_separator() -> None:
 
 def main() -> int:
     print("Compliance Risk RAG Assistant — Final Demo Runner")
-    print(f"Repo root: {REPO_ROOT}")
+
+    print("\n## Run Metadata")
+    print(
+        f"- Timestamp UTC: "
+        f"{datetime.now(timezone.utc).isoformat()}"
+    )
+    print(f"- Git commit: {get_git_commit()}")
+    print(f"- Python version: {platform.python_version()}")
+    print("- Model: Claude via Anthropic API")
+    print("- Retrieval method: Sparse retrieval")
+    print("- Similarity threshold: 0.05")
+
+    print(f"\nRepo root: {REPO_ROOT}")
     print(f"RAG script: {RAG_SCRIPT}")
 
     if not RAG_SCRIPT.exists():
