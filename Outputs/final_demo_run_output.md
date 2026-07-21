@@ -1,3 +1,21 @@
+# Final Demo Run Output
+
+## Run Metadata
+
+- Run date: July 11, 2026
+- Corpus: Synthetic Northbridge third-party risk corpus
+- Generation path: Sparse retrieval → thresholding → Claude grounded answer or abstention
+- Retriever: Sparse retrieval
+- Similarity threshold: 0.05
+- Model: Claude via Anthropic API
+- Demo script: `Scripts/run_demo_tests.py`
+- Corpus file: `Data/processed_chunks.json`
+- Evaluation scope: Five representative scenarios covering direct evidence, sanctions ambiguity, conflicting cyber evidence, unsupported allegations, and high-consequence vendor decisions
+
+## Disclosure
+
+This output reflects one recorded run of the prototype and is not a production benchmark. Results are specific to the current synthetic corpus, retrieval configuration, prompt, and model response.
+
 Compliance Risk RAG Assistant — Final Demo Runner
 Repo root: /Users/austinmack/Documents/GitHub/compliance-risk-rag-assistant
 RAG script: /Users/austinmack/Documents/GitHub/compliance-risk-rag-assistant/Scripts/05_rag_answer.py

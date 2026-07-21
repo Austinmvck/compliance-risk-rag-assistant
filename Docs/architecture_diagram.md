@@ -221,11 +221,9 @@ The most important architectural decision is that the system separates the curre
 
 ## Product Explanation
 
-I designed the architecture to separate the current generation path from evaluated retrieval alternatives.
+The architecture separates the production generation path from evaluated retrieval experiments.
 
-The current system uses sparse retrieval as the default path into Claude because it performed more safely on unsupported allegation and conflict cases. Semantic retrieval and hybrid retrieval were both implemented and evaluated, but they are not the default generation path.
+Sparse retrieval remains the default path because the evaluation showed that relevance alone does not guarantee safe AI behavior. Semantic and hybrid retrieval were evaluated alternatives, with thresholding, abstention, and human-review controls enforcing evidence boundaries.
 
-Semantic retrieval improved meaning-based matching but introduced related-but-non-answering evidence. Hybrid retrieval improved conflict coverage using Reciprocal Rank Fusion, but it still failed the unsupported bribery/corruption test. Because of that, sparse remains the current generation default while semantic and hybrid retrieval are documented as evaluated alternatives.
-
-The main product lesson is that retrieval architecture has to reflect evidence sufficiency, not just relevance. In risk workflows, the system must know when to answer, abstain, or route to human review.
+See `Outputs/final_eval_results.md` for detailed evaluation findings.
 

@@ -76,7 +76,7 @@ However, sparse retrieval performed more safely on the evaluated high-risk cases
 
 In a risk workflow, safer evidence behavior matters more than using the newest retrieval method.
 
-Sparse retrieval stayed as the default because it was more transparent and performed better on the cases where unsupported or conflicting evidence could create the most downstream risk.
+Sparse retrieval was selected as the default because the evaluation showed that transparency and controlled evidence behavior were more important than maximizing retrieval flexibility for this workflow.
 
 The decision was not that sparse retrieval is generally better than semantic retrieval. The decision was that sparse retrieval was safer for the current tested workflow.
 
@@ -431,10 +431,8 @@ Avoid production features that do not prove the core product judgment.
 
 ## Product Explanation
 
-The biggest product tradeoff was choosing the safest retrieval path instead of the most advanced-sounding one.
+The primary tradeoff was optimizing for evidence sufficiency and workflow safety rather than retrieval sophistication alone.
 
-Sparse retrieval stayed as the default because it performed better on unsupported allegation handling and conflict cases. Semantic retrieval improved meaning-based matching, and hybrid retrieval improved conflict coverage, but neither solved evidence sufficiency.
+Sparse retrieval remained the default generation path because it produced more controlled behavior for unsupported allegations and conflicting evidence. Semantic and hybrid retrieval were evaluated as alternatives but did not consistently improve decision safety.
 
-That is why I kept semantic and hybrid retrieval as evaluated alternatives instead of defaulting them into generation.
-
-I also added thresholding and human-review rules because in risk workflows, the product should control when the model answers, abstains, or routes to a human. The goal was not to build a production AI system. The goal was to demonstrate judgment around evidence quality, retrieval behavior, and safe workflow design.
+See `Outputs/final_eval_results.md` for the complete evaluation results and product rationale.

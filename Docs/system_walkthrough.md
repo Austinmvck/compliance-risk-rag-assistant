@@ -400,4 +400,4 @@ The walkthrough starts with a user question, then loads processed chunks that pr
 
 Claude receives the retrieved evidence package, not the full source corpus. The answer includes evidence used, unknowns, limitations, caution, and human-review guidance.
 
-If the evidence is missing, conflicting, ambiguous, or high consequence, the system abstains or routes to human review instead of making a final compliance decision.
+For evaluation results and detailed product decisions, see `Outputs/final_eval_results.md`.

@@ -108,10 +108,10 @@ Did Northbridge engage in bribery or corruption?
 Should Northbridge be approved as a vendor?
 ```
 
-## Product Explanation
+### Product Explanation
 
-The final demo test set is designed to show more than successful RAG answers.
+The demo scenarios evaluate whether the system can answer with evidence, abstain when evidence is insufficient, preserve uncertainty, identify conflicting sources, and respect human decision boundaries.
 
-It tests whether the system can answer when evidence exists, abstain when evidence is missing, identify conflicting sources, avoid overclaiming ambiguous sanctions evidence, and route high-consequence cases to human review.
+The goal is to demonstrate workflow safety rather than only answer quality.
 
-The key product lesson is that AI evaluation for risk workflows needs to measure evidence sufficiency and workflow safety, not just answer fluency.
+See `Outputs/final_eval_results.md` for complete evaluation results.

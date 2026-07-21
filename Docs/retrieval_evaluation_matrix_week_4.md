@@ -86,7 +86,10 @@ The evaluation showed that sparse retrieval, semantic retrieval, and thresholdin
 
 I added semantic retrieval using `sentence-transformers/all-MiniLM-L6-v2` so the system could compare user questions and source chunks by meaning rather than only word overlap. I kept the sparse retrieval baseline so I could compare results instead of assuming embeddings were better.
 
-The results were mixed in a useful way. Semantic retrieval correctly found the expected source for several direct questions, but it also produced false positives on the bribery/corruption question and buried the cyber monitoring report on the patching conflict question. That taught me that semantic similarity is not the same as evidence sufficiency. For compliance workflows, retrieval needs to account for source type, question intent, conflicting evidence, and unsupported allegations. The likely next step is hybrid retrieval rather than blindly replacing sparse retrieval with embeddings.
+The results were mixed in a useful way. Semantic retrieval correctly found the expected source for several direct questions, but it also produced false positives on the bribery/corruption question and buried the cyber monitoring report on the patching conflict question. That taught me that semantic similarity is not the same as evidence sufficiency. For compliance workflows, retrieval needs to account for source type, question intent, conflicting evidence, and unsupported allegations. The experiment informed the decision to evaluate hybrid retrieval without assuming embeddings should replace sparse retrieval by default.
+
+See `Docs/hybrid_retrieval_notes_week_5.md` and `Outputs/final_eval_results.md` for subsequent retrieval experiments and final product decisions.
+
 
 ## Semantic Threshold Sweep
 
