@@ -307,6 +307,31 @@ A future policy check should detect whether an answer:
 - makes a prohibited final decision
 - cites evidence that does not support the claim
 
+## Implemented Reliability Improvements
+
+The initial evaluation findings were converted into explicit controls, regression checks, and reproducibility improvements.
+
+Implemented changes:
+
+- Added fail-fast execution behavior so model/API failures cannot produce false successful evaluations.
+- Added deterministic sparse retrieval regression tests covering:
+  - ownership evidence retrieval
+  - sanctions evidence retrieval
+  - conflicting source retrieval
+  - unsupported allegation abstention
+  - evidence provenance fields
+- Added prompt controls for:
+  - evidence scope limitations
+  - temporal uncertainty
+  - human decision boundaries
+- Added reproducibility controls:
+  - Python 3.12 runtime declaration
+  - bounded dependency versions
+  - GitHub Actions validation workflow
+  - v1.0-portfolio release tag
+
+The goal was not to eliminate uncertainty from AI outputs, but to design a workflow where uncertainty is visible, evidence remains traceable, and unresolved decisions are routed to appropriate human reviewers.
+
 ## Running the Project
 
 ### 1. Clone the repository
