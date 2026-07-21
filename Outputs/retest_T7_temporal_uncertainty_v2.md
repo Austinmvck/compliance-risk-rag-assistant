@@ -1,3 +1,16 @@
+# Targeted Control Retest
+
+## Run Metadata
+
+- Timestamp UTC: Not captured during original run
+- Git commit: Not captured during original run
+- Python version: Not captured during original run
+- Model: Claude via Anthropic API
+- Retrieval method: Sparse retrieval
+- Similarity threshold: 0.05
+
+---
+
 
 Question:
 Are Northbridge systems fully patched?
