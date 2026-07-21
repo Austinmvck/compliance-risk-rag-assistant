@@ -158,6 +158,9 @@ def main() -> int:
         print(f"ERROR: Could not find RAG script at {RAG_SCRIPT}")
         return 1
 
+    successful_runs = 0
+    failed_runs = 0
+
     for evaluation in EVALUATION_QUESTIONS:
         print_separator()
         print(f"{evaluation['id']} — {evaluation['label']}")
@@ -176,10 +179,23 @@ def main() -> int:
 
         if result.returncode != 0:
             print(f"\nWARNING: Evaluation question exited with code {result.returncode}")
+            failed_runs += 1
+        else:
+            successful_runs += 1
+
+    print_separator()
+    print("## Execution Summary")
+    print(f"Planned scenarios: {len(EVALUATION_QUESTIONS)}")
+    print(f"Successful executions: {successful_runs}")
+    print(f"Failed executions: {failed_runs}")
+
+    status = "PASS" if failed_runs == 0 else "FAIL"
+    print(f"Status: {status}")
 
     print_separator()
     print("Full Evaluation run complete.")
-    return 0
+
+    return 0 if failed_runs == 0 else 1
 
 
 if __name__ == "__main__":
