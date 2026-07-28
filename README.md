@@ -6,6 +6,20 @@ This project explores how a retrieval-augmented generation workflow can help ana
 
 This is an AI/Data Product Management proof artifact, not a production compliance system.
 
+## Project Snapshot
+
+| Area | Description |
+|---|---|
+| Product | AI-assisted third-party risk research workflow |
+| User | Compliance analysts and vendor risk teams |
+| Problem | Helping analysts synthesize fragmented risk evidence while preventing unsupported AI conclusions |
+| AI Approach | Retrieval-Augmented Generation (RAG) using Claude via Anthropic API |
+| Data Sources | Synthetic corporate registry, sanctions, cybersecurity, and vendor questionnaire documents |
+| Default Retrieval | Sparse retrieval with threshold-based abstention |
+| Evaluation | 15 controlled scenarios covering evidence, ambiguity, conflict, abstention, and decision boundaries |
+| Core Product Focus | Evidence grounding, uncertainty handling, citations, and human-review workflows |
+| Status | Portfolio prototype; not a production compliance system |
+
 ## Project Thesis
 
 The core lesson from the project is:
@@ -16,7 +30,7 @@ Correct retrieval does not guarantee correct product behavior.
 
 The system performed well when evidence was direct or absent. The hardest cases occurred when relevant evidence existed but required disciplined interpretation.
 
-The final evaluation exposed three distinct post-retrieval risks:
+The final evaluation exposed three post-retrieval product risks:
 
 - a source-scoped sanctions result became a broader clearance claim
 - conflicting evidence from different dates was resolved too definitively
@@ -29,6 +43,20 @@ The resulting product priorities were:
 - consequential-decision restrictions
 - deterministic pre-generation abstention
 - human-review guidance
+
+## Target User
+
+The primary user is a compliance or risk analyst reviewing third-party vendors.
+
+Example questions:
+
+- Who owns this company?
+- Is this individual associated with sanctions risk?
+- Are there unresolved cybersecurity concerns?
+- What evidence supports or conflicts with vendor claims?
+- Should this case be escalated for human review?
+
+The system is designed to support analyst decision-making, not replace final compliance judgment.
 
 ## Start Here
 
@@ -86,7 +114,7 @@ Synthetic source documents
 → evidence, sources, unknowns, confidence, and human-review guidance
 ```
 
-Semantic and hybrid retrieval were implemented as evaluated alternatives but do not feed Claude by default.
+The workflow prioritizes evidence sufficiency, traceability, and controlled abstention before generation.
 
 ## Retrieval Decision
 
@@ -106,11 +134,57 @@ Semantic retrieval = evaluated alternative
 Hybrid retrieval = tested with Reciprocal Rank Fusion and deferred
 ```
 
-Sparse retrieval was retained for the tested workflow because it behaved more safely on unsupported allegations.
+### Sparse Retrieval
 
-Semantic and hybrid retrieval improved meaning-based matching or conflict coverage in some cases, but they also preserved related-but-non-answering evidence risks.
+#### Strengths
 
-This is not a general claim that sparse retrieval is universally superior.
+- Transparent evidence matching
+- Stronger control in tested unsupported-allegation scenarios
+- Easier source traceability
+
+#### Limitation
+
+- May miss evidence when user wording differs significantly from source language
+
+#### Decision
+
+Sparse retrieval remains the default generation path for the current workflow.
+
+---
+
+### Semantic Retrieval
+
+#### Strengths
+
+- Improved meaning-based matching
+- Better discovery of related concepts
+
+#### Limitations
+
+- Can retrieve related but non-answering evidence
+- Semantic relevance does not always equal evidence sufficiency
+
+#### Decision
+
+Semantic retrieval was evaluated but is not used as the default generation path.
+
+---
+
+### Hybrid Retrieval
+
+#### Strengths
+
+- Improved conflict coverage
+- Better ability to surface multiple evidence sources
+
+#### Limitations
+
+- Did not fully solve evidence sufficiency
+- Increased retrieval complexity without eliminating unsafe evidence scenarios
+
+#### Decision
+
+Hybrid retrieval was tested using Reciprocal Rank Fusion and documented as a targeted future improvement.
 
 ## Implemented Capabilities
 
@@ -175,6 +249,21 @@ The evaluation assessed:
 Scoring was performed by the project author against predefined expected behavior and was not independently verified.
 
 This is a controlled qualitative evaluation, not a statistically validated benchmark.
+
+## Evaluation Interpretation
+
+The purpose of the evaluation was not to maximize answer rate.
+
+The goal was to determine whether the system took the correct action:
+
+- Answer when evidence was sufficient
+- Abstain when evidence was missing
+- Preserve uncertainty when evidence conflicted
+- Route high-consequence decisions to human reviewers
+
+A successful AI workflow is not one that always answers.
+
+A successful AI workflow understands when answering is appropriate.
 
 ## Final Evaluation Results
 
@@ -266,7 +355,15 @@ correct evidence
 
 The product therefore needs to evaluate not only retrieval and grounding, but whether the system took the correct action.
 
-## Product Controls Identified
+## Product Controls Added From Evaluation Findings
+
+The evaluation findings were converted into product requirements and system controls rather than treated as isolated model failures.
+
+The controls focused on preventing three categories of unsafe AI behavior:
+
+- unsupported claim expansion
+- incorrect resolution of conflicting evidence
+- decisions outside model authority
 
 ### Claim-Scope Control
 
@@ -488,14 +585,28 @@ These items were excluded to keep the v1 artifact focused on retrieval behavior,
 - Abstention precision and recall.
 - Claim-level citation verification.
 - Temporal-reasoning tests.
-- Source-authority rules.
 - Prohibited-decision detection.
 - Post-generation policy evaluation.
-- Prompt regression testing.
 - Full 15-case semantic and hybrid comparisons.
 - Independent or blinded scoring.
 
 These are future maturity improvements, not requirements for the completed v1 artifact.
+
+## Production Considerations
+
+A production implementation would require additional controls beyond this prototype:
+
+- larger and continuously refreshed data sources
+- source authority ranking
+- automated citation validation
+- model and retrieval monitoring
+- security and access controls
+- human-review workflow integration
+- audit logging
+- evaluation regression pipelines
+- cost and latency optimization
+
+The prototype focuses on demonstrating product judgment around evidence grounding, uncertainty handling, and decision boundaries before production scaling.
 
 ## Project Status
 
